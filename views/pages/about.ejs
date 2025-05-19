@@ -1,41 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
-    <link rel="stylesheet" href="/css/style.css" >
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NPWVQS7KKC');
-</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | EatWhere</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fffaf5;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    h1 {
+      color: #d35400;
+    }
+    h2 {
+      color: #e67e22;
+      margin-top: 2rem;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+    ul {
+      margin-left: 1.5rem;
+    }
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
 </head>
-
-
 <body>
-    <main class="container">
-        <!-- Navbar which can be reused across other pages -->
-        <%- include('../partials/navbar'); %>
+  <div class="container">
+    <h1>🍽️ About EatWhere</h1>
+    <p>
+      Welcome to <strong>EatWhere</strong> — our office lunch spot finder!
+    </p>
 
-        <!-- Information about the about page -->
-        <div class="welcome-container">
-            <h1>About</h1>
-            <p>A short message from me</p>
-        </div>
+    <p>
+      After months (or even years!) of eating out near the office, we noticed a recurring problem:
+    </p>
 
-        <div class="about-container">
-            <img src="/images/about.jpg" alt="Picture of a van with a scenic landscape in the background">
-            <p>Welcome to my blog, the space where I share my thoughts, stories, and insights on a variety of topics that fascinate me, from personal reflections to wider cultural discussions. Launched in 2024, this blog aims to create a community of like-minded individuals who are looking for a mix of inspiration, entertainment, and thought-provoking content. Whether you're here for a quick read or to engage in deeper conversation, I'm glad you stopped by. Join me on this journey of exploration and let's discover the beauty and complexity of our world together.</p>
-            <br>
-            <a href="/">Read my blog!</a>
-        </div>
+    <blockquote>
+      “Where to eat ah?”<br />
+      “Same old places again?”<br />
+      “Eh, can eat halal or vegetarian or not?”
+    </blockquote>
 
-    </main>
+    <p>
+      We get it. Lunch should be something to look forward to — not a midday headache.
+    </p>
+
+    <h2>🥢 What is EatWhere?</h2>
+    <p>
+      <strong>EatWhere</strong> is a light, fun, and practical web app to help you discover 
+      <strong>good food around your workplace</strong>, especially when you're out of ideas or have teammates with different dietary needs.
+      <br />
+      *(“jiak” = eat, “ho” = good, “liao” = stuff in Singlish/Hokkien)*
+    </p>
+
+    <h2>🍛 What You Can Do</h2>
+    <ul>
+      <li>🔍 Filter by cuisine, dietary options, price, and distance</li>
+      <li>📍 Browse curated listings of nearby food spots</li>
+      <li>🎲 Get “Go Lucky” suggestions for something random</li>
+      <li>💬 Read and write reviews to help others</li>
+      <li>➕ Submit new food places for the team</li>
+    </ul>
+
+    <h2>💬 Why We Built This</h2>
+    <p>
+      Because food matters. And team bonding over meals matters too.
+    </p>
+    <p>
+      Whether you’re looking for something affordable, accommodating dietary needs, or just trying not to eat at the same old kopitiam again — jiakHoliao is here to help you <strong>eat better, together</strong>.
+    </p>
+
+    <h2>🚀 Built With ❤️</h2>
+    <p>
+      A Techup prototype turned passion project — made by people who need love lunch, local food culture, and building stuff that helps people.
+    </p>
+
+    <footer>
+      &copy; 2025 Eatwhere. All makan rights reserved.
+    </footer>
+  </div>
 </body>
 </html>
