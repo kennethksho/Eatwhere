@@ -47,6 +47,11 @@ app.get('/about', function(req, res) {
     res.render('pages/about');
 });
 
+// About page
+app.get('/testing', function(req, res) {
+    res.render('pages/testing');
+});
+
 // New post page
 app.get('/new', function(req, res) {
     res.render('pages/new');
