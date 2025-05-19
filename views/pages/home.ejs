@@ -1,46 +1,186 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
-    <link rel="stylesheet" href="/css/style.css" >
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NPWVQS7KKC');
-</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EatWhere</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff6f00;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    .restaurant-card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .restaurant-card img {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .restaurant-info {
+      flex-grow: 1;
+    }
+    .restaurant-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #eee;
+    }
+  </style>
 </head>
 <body>
-    <main class="container">
-        <!-- Navbar which can be reused across other pages -->
-        <%- include('../partials/navbar'); %>
+  <header>
+    <h1>EatWhere 🍜</h1>
+    <p>Find good food nearby – <strong>EatWhere.Food</strong></p>
+  </header>
+  <div class="container">
+    <div class="filters">
+      <select id="filter-cuisine">
+        <option value="">All Cuisines</option>
+        <option value="Asian">Asian</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Malay">Malay</option>
+      </select>
+      <select id="filter-halal">
+        <option value="">Halal?</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <select id="filter-vegetarian">
+        <option value="">Vegetarian?</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <button onclick="filterRestaurants()">Search</button>
+      <button onclick="goLucky()">🎲 Go Lucky!</button>
+    </div>
+    <div id="restaurant-list"></div>
+  </div>
+  <footer>
+    &copy; 2025 EatWhere.Food. All rights reserved.
+  </footer>
 
-        <!-- Information welcoming visitors to my page -->
-        <div class="welcome-container">
-            <h1>Welcome to my blog</h1>
-            <h2>Learn about what happened in my day!</h2>
-        </div>
+  <script>
+    const restaurants = [
+      {
+        name: "Yakun",
+        location: "Funan",
+        cuisine: "Asian",
+        halal: "Yes",
+        vegetarian: "Yes",
+        price: "$",
+        distance: "200m",
+        image: "https://via.placeholder.com/150x100.png?text=Yakun"
+      },
+      {
+        name: "Rainbow",
+        location: "Circular road",
+        cuisine: "Chinese",
+        halal: "No",
+        vegetarian: "Yes",
+        price: "$",
+        distance: "500m",
+        image: "https://via.placeholder.com/150x100.png?text=Rainbow"
+      },
+      {
+        name: "Donki",
+        location: "Central",
+        cuisine: "Japanese",
+        halal: "No",
+        vegetarian: "Yes",
+        price: "$$",
+        distance: "200m",
+        image: "https://via.placeholder.com/150x100.png?text=Donki"
+      },
+      {
+        name: "Rendevour",
+        location: "Central",
+        cuisine: "Malay",
+        halal: "Yes",
+        vegetarian: "No",
+        price: "$$",
+        distance: "200m",
+        image: "https://via.placeholder.com/150x100.png?text=Rendevour"
+      },
+    ];
 
-        <div class="new-post-btn-container">
-           <a href="/new" class="button" role="button">+ New Post</a>
-        </div>
+    function renderList(data) {
+      const container = document.getElementById("restaurant-list");
+      container.innerHTML = "";
+      if (data.length === 0) {
+        container.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      data.forEach((r) => {
+        container.innerHTML += `
+          <div class="restaurant-card">
+            <img src="${r.image}" alt="${r.name}" />
+            <div class="restaurant-info">
+              <div class="restaurant-name">${r.name}</div>
+              <p>${r.cuisine} • Halal: ${r.halal} • Vegetarian: ${r.vegetarian}</p>
+              <p>Location: ${r.location} • Price: ${r.price} • Distance: ${r.distance}</p>
+            </div>
+          </div>
+        `;
+      });
+    }
 
-        <!-- Show blog posts -->
-        <% blogs.forEach(post => { %>
-            <article class="post-container">
-                <h3><%= post.title %></h3>
-                <p><%= post.content %></p>
-                <form action="/delete/<%= post.id %>" method="post" onsubmit="return confirm('Do you really want to delete this post?');">
-                    <button class="outline primary" type="submit">Delete</button>
-                </form>
-            </article>
-        <% }); %>
-    </main>
+    function filterRestaurants() {
+      const cuisine = document.getElementById("filter-cuisine").value;
+      const halal = document.getElementById("filter-halal").value;
+      const vegetarian = document.getElementById("filter-vegetarian").value;
+      const results = restaurants.filter((r) => {
+        return (
+          (cuisine === "" || r.cuisine === cuisine) &&
+          (halal === "" || r.halal === halal) &&
+          (vegetarian === "" || r.vegetarian === vegetarian)
+        );
+      });
+      renderList(results);
+    }
+
+    function goLucky() {
+      const random = restaurants[Math.floor(Math.random() * restaurants.length)];
+      renderList([random]);
+    }
+
+    // Initial render
+    renderList(restaurants);
+  </script>
 </body>
 </html>
