@@ -16,21 +16,43 @@
       color: white;
       padding: 1rem;
       text-align: center;
+      animation: fadeInDown 1s ease;
+    }
+    nav {
+      background-color: #ff8f00;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      animation: fadeIn 1.5s ease;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #000;
     }
     .container {
       max-width: 1000px;
       margin: 2rem auto;
       padding: 1rem;
+      animation: fadeInUp 1s ease;
     }
     .filters {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 2rem;
+      animation: fadeIn 1.2s ease;
     }
     select, button {
       padding: 0.5rem;
       font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid #ccc;
     }
     .restaurant-card {
       background-color: white;
@@ -41,6 +63,7 @@
       display: flex;
       gap: 1rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: fadeSlideIn 0.8s ease forwards;
     }
     .restaurant-card img {
       width: 150px;
@@ -59,22 +82,59 @@
       text-align: center;
       padding: 1rem;
       background: #eee;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NPWVQS7KKC');
+</script>
 </head>
 <body>
   <header>
     <h1>EatWhere 🍜</h1>
     <p>Find good food nearby – <strong>EatWhere.Food</strong></p>
   </header>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/explore">Explore</a>
+    <a href="/about">About</a>
+  </nav>
   <div class="container">
     <div class="filters">
       <select id="filter-cuisine">
         <option value="">All Cuisines</option>
-        <option value="Asian">Asian</option>
-        <option value="Chinese">Chinese</option>
-        <option value="Japanese">Japanese</option>
-        <option value="Malay">Malay</option>
       </select>
       <select id="filter-halal">
         <option value="">Halal?</option>
@@ -92,78 +152,46 @@
     <div id="restaurant-list"></div>
   </div>
   <footer>
-    &copy; 2025 EatWhere.Food. All rights reserved.
+    &copy; 2025 EatWhere.Food. All makan rights reserved.
   </footer>
 
   <script>
-    const restaurants = [
-      {
-        name: "Yakun",
-        location: "Funan",
-        cuisine: "Asian",
-        halal: "Yes",
-        vegetarian: "Yes",
-        price: "$",
-        distance: "200m",
-        image: "https://via.placeholder.com/150x100.png?text=Yakun"
-      },
-      {
-        name: "Rainbow",
-        location: "Circular road",
-        cuisine: "Chinese",
-        halal: "No",
-        vegetarian: "Yes",
-        price: "$",
-        distance: "500m",
-        image: "https://via.placeholder.com/150x100.png?text=Rainbow"
-      },
-      {
-        name: "Donki",
-        location: "Central",
-        cuisine: "Japanese",
-        halal: "No",
-        vegetarian: "Yes",
-        price: "$$",
-        distance: "200m",
-        image: "https://via.placeholder.com/150x100.png?text=Donki"
-      },
-      {
-        name: "Rendevour",
-        location: "Central",
-        cuisine: "Malay",
-        halal: "Yes",
-        vegetarian: "No",
-        price: "$$",
-        distance: "200m",
-        image: "https://via.placeholder.com/150x100.png?text=Rendevour"
-      },
-    ];
+    async function fetchRestaurants() {
+      const response = await fetch('/api/restaurants');
+      const data = await response.json();
+      return data;
+    }
 
-    function renderList(data) {
+    async function renderList(data) {
       const container = document.getElementById("restaurant-list");
       container.innerHTML = "";
       if (data.length === 0) {
         container.innerHTML = "<p>No results found.</p>";
         return;
       }
-      data.forEach((r) => {
-        container.innerHTML += `
-          <div class="restaurant-card">
-            <img src="${r.image}" alt="${r.name}" />
-            <div class="restaurant-info">
-              <div class="restaurant-name">${r.name}</div>
-              <p>${r.cuisine} • Halal: ${r.halal} • Vegetarian: ${r.vegetarian}</p>
-              <p>Location: ${r.location} • Price: ${r.price} • Distance: ${r.distance}</p>
-            </div>
+      data.forEach((r, index) => {
+        const card = document.createElement("div");
+        card.className = "restaurant-card";
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.innerHTML = `
+          <img src="${r.image}" alt="${r.name}" />
+          <div class="restaurant-info">
+            <div class="restaurant-name">${r.name}</div>
+            <p>${r.cuisine} • Halal: ${r.halal} • Vegetarian: ${r.vegetarian}</p>
+            <p>Location: ${r.location} • Price: ${r.price} • Distance: ${r.distance}</p>
+            <p><strong>Review:</strong> ${r.review || 'No review yet.'}</p>
           </div>
         `;
+        container.appendChild(card);
       });
     }
 
-    function filterRestaurants() {
+    async function filterRestaurants() {
       const cuisine = document.getElementById("filter-cuisine").value;
       const halal = document.getElementById("filter-halal").value;
       const vegetarian = document.getElementById("filter-vegetarian").value;
+
+      let restaurants = await fetchRestaurants();
       const results = restaurants.filter((r) => {
         return (
           (cuisine === "" || r.cuisine === cuisine) &&
@@ -174,13 +202,24 @@
       renderList(results);
     }
 
-    function goLucky() {
+    async function goLucky() {
+      let restaurants = await fetchRestaurants();
       const random = restaurants[Math.floor(Math.random() * restaurants.length)];
       renderList([random]);
     }
 
-    // Initial render
-    renderList(restaurants);
+    // Init: Load cuisine options & defer results
+    window.onload = async function() {
+      const data = await fetchRestaurants();
+      const cuisines = [...new Set(data.map(r => r.cuisine))];
+      const select = document.getElementById("filter-cuisine");
+      cuisines.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.text = c;
+        select.appendChild(opt);
+      });
+    }
   </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
-  "name": "techup-sample-blog",
+  "name": "EatWhere",
   "version": "1.0.0",
-  "description": "Sample Blog webapp for TechUp",
+  "description": "EatWhere",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
