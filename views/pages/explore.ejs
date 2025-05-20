@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explore - EatWhere</title>
+  <title>EatWhere</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,6 +16,7 @@
       color: white;
       padding: 1rem;
       text-align: center;
+      animation: fadeInDown 1s ease;
     }
     nav {
       background-color: #ff8f00;
@@ -23,31 +24,34 @@
       display: flex;
       justify-content: center;
       gap: 2rem;
+      animation: fadeIn 1.5s ease;
     }
     nav a {
       color: white;
       text-decoration: none;
       font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #000;
     }
     .container {
       max-width: 1000px;
       margin: 2rem auto;
       padding: 1rem;
+      animation: fadeInUp 1s ease;
     }
     .filters {
       display: flex;
-      flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 2rem;
+      animation: fadeIn 1.2s ease;
     }
-    select, button, input, textarea {
+    select, button, input[type="text"] {
       padding: 0.5rem;
       font-size: 1rem;
       border-radius: 12px;
       border: 1px solid #ccc;
-    }
-    .section {
-      margin-bottom: 2rem;
     }
     .restaurant-card {
       background-color: white;
@@ -58,6 +62,7 @@
       display: flex;
       gap: 1rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s ease;
     }
     .restaurant-card img {
       width: 150px;
@@ -72,73 +77,105 @@
       font-size: 1.2rem;
       font-weight: bold;
     }
+    .highlight {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .submission-form {
+      margin-top: 3rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
     footer {
       text-align: center;
       padding: 1rem;
       background: #eee;
+      animation: fadeInUp 1.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NPWVQS7KKC');
-</script>
 </head>
 <body>
   <header>
-    <h1>Explore Eateries 🍴</h1>
-    <p>Find the best spots recommended this month</p>
+    <h1>EatWhere 🍜</h1>
+    <p>Find good food nearby – <strong>EatWhere.Food</strong></p>
   </header>
   <nav>
-    <a href="/">Home</a>
-    <a href="/explore">Explore</a>
-    <a href="/about">About</a>
+    <a href="#">Home</a>
+    <a href="#">Explore</a>
+    <a href="#">About</a>
   </nav>
-
   <div class="container">
-    <div class="filters">
-      <select id="filter-location">
-        <option value="">All Locations</option>
-      </select>
-      <button onclick="filterByLocation()">Search</button>
-    </div>
-
-    <div class="section">
-      <h2>🆕 Latest Eateries This Month</h2>
+    <div class="highlight" id="new-addition">
+      <strong>New this month:</strong>
       <div class="restaurant-card">
-        <img src="https://scontent-sin6-2.cdninstagram.com/v/t51.29350-15/438609456_436446745542259_7575101981278915309_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=18de74&_nc_ohc=WlxtQuOIlZIQ7kNvgEaJRWy&_nc_ht=scontent-sin6-2.cdninstagram.com&edm=AL-3X8kEAAAA&oh=00_AYAobq2D-mc8ybrFne7EqMmJuyXakXcBr1ef9FYITFgBKw&oe=6652C574" alt="Sushi Zushi SG">
+        <img src="https://scontent.cdninstagram.com/v/t51.29350-15/432624214_785846930268293_3815392670532611913_n.jpg" alt="Sushi Zushi SG">
         <div class="restaurant-info">
           <div class="restaurant-name">Sushi Zushi SG</div>
           <p>Japanese • Halal: No • Vegetarian: Yes</p>
-          <p>Location: Tanjong Pagar • Price: $$ • Distance: 600m</p>
+          <p>Location: Funan #02-01 • Price: $$ • Distance: 250m</p>
           <p><strong>Review:</strong> Great sushi selection and fresh taste!</p>
-          <a href="https://www.instagram.com/sushizushisg/?hl=en" target="_blank">View Instagram</a>
         </div>
       </div>
     </div>
 
-    <div class="section">
-      <h2>📥 Submit Your Favourite Eatery</h2>
-      <form id="submit-form">
-        <input type="text" placeholder="Name" name="name" required />
-        <input type="text" placeholder="Cuisine" name="cuisine" required />
-        <input type="text" placeholder="Location" name="location" required />
-        <input type="text" placeholder="Price" name="price" required />
-        <input type="url" placeholder="Image URL" name="image" />
-        <textarea name="review" placeholder="Your review" rows="4" required></textarea>
-        <button type="submit">Submit</button>
-      </form>
-      <div id="submit-message"></div>
-    </div>
+    <fieldset class="filters">
+      <legend>Filter by Location</legend>
+      <label>
+        <select id="filter-location" onchange="filterRestaurants()">
+          <option value="">All Locations</option>
+          <option value="Funan">Funan</option>
+          <option value="Chinatown">Chinatown</option>
+          <option value="Raffles City">Raffles City</option>
+          <option value="Bugis">Bugis</option>
+          <option value="Orchard">Orchard</option>
+        </select>
+      </label>
+      <button onclick="goLucky()">🎲 Go Lucky!</button>
+    </fieldset>
 
-    <div class="section">
-      <h2>📋 User Submitted Eateries</h2>
-      <div id="user-submissions"></div>
-    </div>
+    <div id="restaurant-list"></div>
+
+    <form class="submission-form" onsubmit="submitRestaurant(); return false;">
+      <h3>Submit a New Spot</h3>
+      <label>Name: <input type="text" id="name" placeholder="Name" required /></label><br />
+      <label>Location: <input type="text" id="location" placeholder="Location" required /></label><br />
+      <label>Cuisine: <input type="text" id="cuisine" placeholder="Cuisine" required /></label><br />
+      <label>Halal:
+        <select id="halal" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </label><br />
+      <label>Vegetarian:
+        <select id="vegetarian" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </label><br />
+      <label>Price: <input type="text" id="price" placeholder="Price Range" required /></label><br />
+      <label>Distance: <input type="text" id="distance" placeholder="Distance from office" required /></label><br />
+      <label>Image URL: <input type="text" id="image" placeholder="Image URL" required /></label><br />
+      <label>Review: <input type="text" id="review" placeholder="Your Review" required /></label><br />
+      <button type="submit">Submit</button>
+    </form>
   </div>
 
   <footer>
@@ -146,73 +183,85 @@
   </footer>
 
   <script>
-    async function fetchLocations() {
-      const res = await fetch('/api/locations');
-      const data = await res.json();
-      return [...new Set(data.map(r => r.location))];
+    let allRestaurants = [];
+
+    async function fetchRestaurants() {
+      const response = await fetch('/api/restaurants');
+      const data = await response.json();
+      allRestaurants = data;
+      return data;
     }
 
-    async function filterByLocation() {
-      const location = document.getElementById("filter-location").value;
-      const res = await fetch('/api/restaurants');
-      const data = await res.json();
-      const filtered = location ? data.filter(r => r.location === location) : data;
-      renderSubmissions(filtered);
-    }
-
-    function renderSubmissions(data) {
-      const container = document.getElementById("user-submissions");
+    async function renderList(data) {
+      const container = document.getElementById("restaurant-list");
       container.innerHTML = "";
-      data.forEach(r => {
-        const div = document.createElement("div");
-        div.className = "restaurant-card";
-        div.innerHTML = `
-          <img src="${r.image || 'https://via.placeholder.com/150'}" alt="${r.name}">
-          <div class="restaurant-info">
-            <div class="restaurant-name">${r.name}</div>
-            <p>${r.cuisine}</p>
-            <p>Location: ${r.location} • Price: ${r.price}</p>
-            <p><strong>Review:</strong> ${r.review}</p>
+      if (data.length === 0) {
+        container.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      data.forEach((r) => {
+        if (!r.location || !r.name || !r.image) return;
+        container.innerHTML += `
+          <div class="restaurant-card">
+            <img src="${r.image}" alt="${r.name}" />
+            <div class="restaurant-info">
+              <div class="restaurant-name">${r.name}</div>
+              <p>${r.cuisine} • Halal: ${r.halal} • Vegetarian: ${r.vegetarian}</p>
+              <p>Location: ${r.location} • Price: ${r.price} • Distance: ${r.distance}</p>
+              <p><em>Review:</em> ${r.review || 'N/A'}</p>
+            </div>
           </div>
         `;
-        container.appendChild(div);
       });
     }
 
-    async function loadLocations() {
-      const locations = await fetchLocations();
-      const select = document.getElementById("filter-location");
-      locations.forEach(loc => {
-        const opt = document.createElement("option");
-        opt.value = loc;
-        opt.text = loc;
-        select.appendChild(opt);
+    async function filterRestaurants() {
+      const location = document.getElementById("filter-location").value.toLowerCase();
+      const results = allRestaurants.filter((r) => {
+        const loc = r.location || "";
+        return location === "" || loc.toLowerCase().includes(location);
       });
+      renderList(results);
     }
 
-    document.getElementById("submit-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
+    async function goLucky() {
+      const random = allRestaurants[Math.floor(Math.random() * allRestaurants.length)];
+      renderList([random]);
+    }
 
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+    async function submitRestaurant() {
+      const newEntry = {
+        name: document.getElementById("name").value,
+        location: document.getElementById("location").value,
+        cuisine: document.getElementById("cuisine").value,
+        halal: document.getElementById("halal").value,
+        vegetarian: document.getElementById("vegetarian").value,
+        price: document.getElementById("price").value,
+        distance: document.getElementById("distance").value,
+        image: document.getElementById("image").value,
+        review: document.getElementById("review").value
+      };
 
-      if (res.ok) {
-        document.getElementById("submit-message").innerText = "Thanks for your submission!";
-        e.target.reset();
-        filterByLocation(); // reload user submissions
-      } else {
-        document.getElementById("submit-message").innerText = "Error submitting data.";
+      try {
+        const response = await fetch('/api/addRestaurant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newEntry)
+        });
+
+        if (!response.ok) throw new Error("Failed to submit");
+        allRestaurants.push(newEntry);
+        renderList(allRestaurants);
+        alert("Restaurant submitted successfully!");
+        document.querySelector(".submission-form").reset();
+      } catch (error) {
+        alert("Error submitting restaurant: " + error.message);
       }
-    });
+    }
 
-    window.onload = async () => {
-      await loadLocations();
-      await filterByLocation();
+    window.onload = async function() {
+      const data = await fetchRestaurants();
+      renderList(data);
     }
   </script>
 </body>
