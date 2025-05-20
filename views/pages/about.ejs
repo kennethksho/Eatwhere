@@ -6,27 +6,57 @@
   <title>About | EatWhere</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background: #fffaf5;
       color: #333;
       line-height: 1.6;
     }
+    header {
+      background-color: #ff6f00;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      animation: fadeInDown 1s ease;
+    }
+    nav {
+      background-color: #ff8f00;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      animation: fadeIn 1.5s ease;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #000;
+    }
     .container {
       max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
+      margin: 2rem auto;
+      padding: 1rem;
+      animation: fadeInUp 1s ease;
     }
     h1 {
       color: #d35400;
+      font-size: 2rem;
     }
     h2 {
       color: #e67e22;
       margin-top: 2rem;
     }
-    p {
-      margin-bottom: 1rem;
+    blockquote {
+      background: #fff3cd;
+      padding: 1rem;
+      border-left: 4px solid #ffc107;
+      font-style: italic;
+      margin: 1.5rem 0;
     }
     ul {
       margin-left: 1.5rem;
@@ -34,30 +64,50 @@
     footer {
       text-align: center;
       margin-top: 4rem;
+      padding: 1rem;
+      background: #eee;
       font-size: 0.9rem;
       color: #888;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NPWVQS7KKC');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NPWVQS7KKC');
+  </script>
 </head>
 <body>
+  <header>
+    <h1>EatWhere 🍜</h1>
+    <p>Find good food nearby – <strong>EatWhere.Food</strong></p>
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="explore.html">Explore</a>
+    <a href="about.html">About</a>
+  </nav>
   <div class="container">
     <h1>🍽️ About EatWhere</h1>
-    <p>
-      Welcome to <strong>EatWhere</strong> — our office lunch spot finder!
-    </p>
+    <p>Welcome to <strong>EatWhere</strong> — our office lunch spot finder!</p>
 
-    <p>
-      After months (or even years!) of eating out near the office, we noticed a recurring problem:
-    </p>
+    <p>After months (or even years!) of eating out near the office, we noticed a recurring problem:</p>
 
     <blockquote>
       “Where to eat ah?”<br />
@@ -65,16 +115,11 @@
       “Eh, can eat halal or vegetarian or not?”
     </blockquote>
 
-    <p>
-      We get it. Lunch should be something to look forward to — not a midday headache.
-    </p>
+    <p>We get it. Lunch should be something to look forward to — not a midday headache.</p>
 
     <h2>🥢 What is EatWhere?</h2>
-    <p>
-      <strong>EatWhere</strong> is a light, fun, and practical web app to help you discover 
-      <strong>good food around your workplace</strong>, especially when you're out of ideas or have teammates with different dietary needs.
-      <br />
-    </p>
+    <p><strong>EatWhere</strong> is a light, fun, and practical web app to help you discover 
+      <strong>good food around your workplace</strong>, especially when you're out of ideas or have teammates with different dietary needs.</p>
 
     <h2>🍛 What You Can Do</h2>
     <ul>
@@ -85,22 +130,16 @@
       <li>➕ Submit new food places for the team</li>
     </ul>
 
-    <h2>💬 Why I Built This</h2>
-    <p>
-      Because food matters and team bonding over meals matters.
-    </p>
-    <p>
-      Whether you’re looking for something affordable, accommodating dietary needs, or just trying not to eat at the same old kopitiam again — EatWhere is here to help you <strong>eat better, together</strong>.
-    </p>
+    <h2>💬 Why We Built This</h2>
+    <p>Because food matters and team bonding over meals matters.</p>
+    <p>Whether you’re looking for something affordable, accommodating dietary needs, or just trying not to eat at the same old kopitiam again — EatWhere is here to help you <strong>eat better, together</strong>.</p>
 
     <h2>🚀 Built With ❤️</h2>
-    <p>
-      A 4th Techup prototype turned passion project — made by people who need love food, and building stuff that helps people.
-    </p>
-
-    <footer>
-      &copy; 2025 EatWhere. All makan rights reserved.
-    </footer>
+    <p>A 4th Techup prototype turned passion project — made by people who love food and building things that help others.</p>
   </div>
+
+  <footer>
+    &copy; 2025 EatWhere.Food. All makan rights reserved.
+  </footer>
 </body>
 </html>
