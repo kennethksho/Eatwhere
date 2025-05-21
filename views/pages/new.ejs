@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EatWhere</title>
   <style>
@@ -129,44 +129,8 @@
     <a href="/about">About</a>
     <a href="/new">New</a>
   </nav>
-  <div class="container">
-    <div class="highlight" id="new-addition">
-      <strong>New this month:</strong>
-      <div class="restaurant-card">
-        <img src="https://scontent.cdninstagram.com/v/t51.29350-15/432624214_785846930268293_3815392670532611913_n.jpg" alt="Sushi Zushi SG">
-        <div class="restaurant-info">
-          <div class="restaurant-name">Sushi Zushi SG</div>
-          <p>Japanese • Halal: No • Vegetarian: Yes</p>
-          <p>Location: Funan #02-01 • Price: $$ • Distance: 250m</p>
-          <p><strong>Review:</strong> Great sushi selection and fresh taste!</p>
-        </div>
-      </div>
-    </div>
 
-    <fieldset class="filters">
-      <legend>Filter by Location</legend>
-      <label>
-        <select id="filter-location" onchange="filterRestaurants()">
-          <option value="">All Locations</option>
-          <!-- <option value="Funan">Funan</option>
-          <option value="Chinatown">Chinatown</option>
-          <option value="Raffles City">Raffles City</option>
-          <option value="Bugis">Bugis</option>
-          <option value="Orchard">Orchard</option> -->
-          <% locations.forEach(location => { %>
-            <option value=<%= location %>><%= location %></option>
-          <% }); %>
-          
-        </select>
-      </label>
-      <button onclick="goLucky()">🎲 Go Lucky!</button>
-    </fieldset>
-
-    <div id="restaurant-list"></div>
-
-<!-- 
-
-<script>
+    <script>
   async function submitRestaurant() {
     const newEntry = {
       Name: document.getElementById("name").value,
@@ -198,9 +162,6 @@
   }
 </script>
 
-
-
-
     <form class="submission-form" onsubmit="submitRestaurant(); return false;">
       <h3>Submit a New Spot</h3>
       <label>Name: <input type="text" id="name" placeholder="Name" required /></label><br />
@@ -228,77 +189,9 @@
       <button type="submit">Submit</button>
     </form>
   </div>
- -->
+
   <footer>
     &copy; 2025 EatWhere.Food. All makan rights reserved.
   </footer>
-
-  <script>
-  let allRestaurants = [];
-
-  async function fetchRestaurants() {
-    try {
-      const response = await fetch('/api/restaurants');
-      const data = await response.json();
-      console.log("✅ Fetched data:", data);
-      allRestaurants = data;
-      return data;
-    } catch (error) {
-      console.error("❌ Failed to fetch restaurants:", error);
-      return [];
-    }
-  }
-
-  async function renderList(data) {
-    const container = document.getElementById("restaurant-list");
-    container.innerHTML = "";
-    if (data.length === 0) {
-      container.innerHTML = "<p>No results found.</p>";
-      return;
-    }
-    let restaurants = ''
-    data.forEach((r) => {
-      if (!r.Location || !r.Name ) return; // ✅ match DB fields
-      restaurants += `
-        <div class="restaurant-card">
-          <img src="${r.Image_URL}" alt="${r.Name}" />
-          <div class="restaurant-info">
-            <div class="restaurant-name">${r.Name}</div>
-            <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian: ${r.Vegetarian}</p>
-            <p>Location: ${r.Location} • Price: ${r.Price} • Distance: ${r.Distance}</p>
-            <p><em>Review:</em> ${r.Review || 'N/A'}</p>
-          </div>
-        </div>
-      `;
-    });
-    container.innerHTML=restaurants
-  }
-
-  async function filterRestaurants() {
-    const location = document.getElementById("filter-location").value.toLowerCase().trim();
-    const results = allRestaurants.filter((r) => {
-      const loc = (r.Location || "").toLowerCase().trim(); // ✅ use DB field name
-      return location === "" || loc.includes(location);
-    });
-
-    console.log("✅ Selected location:", location);
-    console.log("✅ Filtered results:", results);
-    renderList(results);
-  }
-
-  async function goLucky() {
-    if (allRestaurants.length === 0) return;
-    const random = allRestaurants[Math.floor(Math.random() * allRestaurants.length)];
-    renderList([random]);
-  }
-
-  window.onload = async function () {
-    const data = await fetchRestaurants();
-    console.log("✅ Loaded on page:", data);
-    renderList(data, location);
-  };
-</script>
-
-
 </body>
 </html>
