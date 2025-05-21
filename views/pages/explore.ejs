@@ -164,71 +164,6 @@
 
     <div id="restaurant-list"></div>
 
-<!-- 
-
-<script>
-  async function submitRestaurant() {
-    const newEntry = {
-      Name: document.getElementById("name").value,
-      Location: document.getElementById("location").value,
-      Cuisine: document.getElementById("cuisine").value,
-      Halal: document.getElementById("halal").value,
-      Vegetarian: document.getElementById("vegetarian").value,
-      Price: document.getElementById("price").value,
-      Distance: document.getElementById("distance").value,
-      Image_URL: document.getElementById("image").value,
-      Review: document.getElementById("review").value,
-      Unit: "NULL", // Optional: default values
-      Type: "NULL"
-    };
-
-    try {
-      const response = await fetch('/api/addRestaurant', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEntry)
-      });
-
-      if (!response.ok) throw new Error("Failed to submit");
-      alert("Restaurant submitted successfully!");
-      document.querySelector(".submission-form").reset();
-    } catch (error) {
-      alert("Error submitting restaurant: " + error.message);
-    }
-  }
-</script>
-
-
-
-
-    <form class="submission-form" onsubmit="submitRestaurant(); return false;">
-      <h3>Submit a New Spot</h3>
-      <label>Name: <input type="text" id="name" placeholder="Name" required /></label><br />
-      <label>Location: <input type="text" id="location" placeholder="Location" required /></label><br />
-      <label>Unit: <input type="text" id="Unit" placeholder="Unit" required /></label><br />
-      <label>Cuisine: <input type="text" id="cuisine" placeholder="Cuisine" required /></label><br />
-      <label>Halal:
-        <select id="halal" required>
-          <option value="">Select</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </label><br />
-      <label>Vegetarian:
-        <select id="vegetarian" required>
-          <option value="">Select</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </label><br />
-      <label>Price: <input type="text" id="price" placeholder="Price Range" required /></label><br />
-      <label>Distance: <input type="text" id="distance" placeholder="Distance from office" required /></label><br />
-      <label>Image URL: <input type="text" id="image" placeholder="Image URL" required /></label><br />
-      <label>Review: <input type="text" id="review" placeholder="Your Review" required /></label><br />
-      <button type="submit">Submit</button>
-    </form>
-  </div>
- -->
   <footer>
     &copy; 2025 EatWhere.Food. All makan rights reserved.
   </footer>
@@ -292,10 +227,10 @@
     renderList([random]);
   }
 
-  window.onload = async function () {
-    const data = await fetchRestaurants();
-    console.log("✅ Loaded on page:", data);
-    renderList(data, location);
+ window.onload = async function () {
+  await fetchRestaurants(); // only fetch, don't render yet
+  console.log("✅ Restaurants loaded into memory.");
+
   };
 </script>
 

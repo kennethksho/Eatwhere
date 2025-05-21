@@ -1,27 +1,19 @@
-// Needed for dotenv
 require("dotenv").config();
-
-// Needed for Express
 const express = require('express');
 const cors = require('cors');
 const app = express();
-
-// Needed for EJS
 app.set('view engine', 'ejs');
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Prisma setup
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// API: Get restaurants from database
+// API: Get all restaurants
 app.get('/api/restaurants', async (req, res) => {
   try {
-    const data = await prisma.restaurants.findMany(); // <-- plural
+    const data = await prisma.restaurants.findMany();
     res.json(data);
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -29,7 +21,7 @@ app.get('/api/restaurants', async (req, res) => {
   }
 });
 
-// API: Add a new restaurant
+// API: Add new restaurant
 app.post('/api/addRestaurant', async (req, res) => {
   const {
     Name, Location, Cuisine, Halal, Vegetarian,
@@ -60,17 +52,34 @@ app.post('/api/addRestaurant', async (req, res) => {
 });
 
 // Pages
-app.get('/', (req, res) => res.render('pages/home'));
+app.get('/', async (req, res) => {
+  try {
+    const restaurants = await prisma.restaurants.findMany();
+    const cuisines = [...new Set(restaurants.map((d) => d.Cuisine))];
+    res.render('pages/home', { cuisines });
+  } catch (error) {
+    console.error("Error loading home page:", error);
+    res.render('pages/home', { cuisines: [] });
+  }
+});
+
 app.get('/about', (req, res) => res.render('pages/about'));
 app.get('/new', (req, res) => res.render('pages/new'));
-app.get('/explore', async(req, res) => {
-  const restaurants =  await prisma.restaurants.findMany()
-  
-    const locations =new Set(restaurants.map((d)=>d.Location))
-  await res.render('pages/explore', {locations: locations})
+
+app.get('/explore', async (req, res) => {
+  try {
+    const restaurants = await prisma.restaurants.findMany();
+    const locations = [...new Set(restaurants.map((d) => d.Location))];
+    res.render('pages/explore', { locations });
+  } catch (error) {
+    console.error("Error loading explore page:", error);
+    res.render('pages/explore', { locations: [] });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+}).on('error', err => {
+  console.error("Server failed to start:", err);
 });

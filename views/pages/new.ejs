@@ -1,128 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EatWhere</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f8f9fa;
       margin: 0;
       padding: 0;
+      color: #333;
     }
+
     header {
       background-color: #ff6f00;
       color: white;
-      padding: 1rem;
+      padding: 1.5rem 1rem;
       text-align: center;
-      animation: fadeInDown 1s ease;
     }
+
     nav {
       background-color: #ff8f00;
-      padding: 0.75rem;
       display: flex;
       justify-content: center;
       gap: 2rem;
-      animation: fadeIn 1.5s ease;
+      padding: 1rem;
     }
+
     nav a {
       color: white;
       text-decoration: none;
       font-weight: bold;
-      transition: color 0.3s;
+      font-size: 1.1rem;
     }
+
     nav a:hover {
-      color: #000;
+      text-decoration: underline;
     }
+
     .container {
-      max-width: 1000px;
+      max-width: 800px;
       margin: 2rem auto;
       padding: 1rem;
-      animation: fadeInUp 1s ease;
     }
-    .filters {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      animation: fadeIn 1.2s ease;
-    }
-    select, button, input[type="text"] {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-    }
-    .restaurant-card {
-      background-color: white;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      animation: fadeInUp 0.8s ease;
-    }
-    .restaurant-card img {
-      width: 150px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .restaurant-info {
-      flex-grow: 1;
-    }
-    .restaurant-name {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .highlight {
-      background-color: #fff3cd;
-      border-left: 5px solid #ffc107;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-    }
+
     .submission-form {
-      margin-top: 3rem;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       border: 1px solid #ddd;
     }
+
+    .submission-form h3 {
+      margin-bottom: 1.5rem;
+      color: #444;
+    }
+
+    .submission-form label {
+      display: block;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .submission-form input,
+    .submission-form select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    .submission-form button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.2rem;
+      background-color: #ff6f00;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submission-form button:hover {
+      background-color: #e65c00;
+    }
+
     footer {
       text-align: center;
       padding: 1rem;
       background: #eee;
-      animation: fadeInUp 1.5s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes fadeInUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes fadeInDown {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      margin-top: 2rem;
     }
   </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-NPWVQS7KKC');
-  </script>
 </head>
 <body>
+
   <header>
     <h1>EatWhere 🍜</h1>
     <p>Good food around you – <strong>EatWhere.Food</strong></p>
   </header>
+
   <nav>
     <a href="/">Home</a>
     <a href="/explore">Explore</a>
@@ -130,62 +113,58 @@
     <a href="/new">New</a>
   </nav>
 
-    <script>
-  async function submitRestaurant() {
-    const newEntry = {
-      Name: document.getElementById("name").value,
-      Location: document.getElementById("location").value,
-      Cuisine: document.getElementById("cuisine").value,
-      Halal: document.getElementById("halal").value,
-      Vegetarian: document.getElementById("vegetarian").value,
-      Price: document.getElementById("price").value,
-      Distance: document.getElementById("distance").value,
-      Image_URL: document.getElementById("image").value,
-      Review: document.getElementById("review").value,
-      Unit: "NULL", // Optional: default values
-      Type: "NULL"
-    };
-
-    try {
-      const response = await fetch('/api/addRestaurant', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEntry)
-      });
-
-      if (!response.ok) throw new Error("Failed to submit");
-      alert("Restaurant submitted successfully!");
-      document.querySelector(".submission-form").reset();
-    } catch (error) {
-      alert("Error submitting restaurant: " + error.message);
-    }
-  }
-</script>
-
+  <div class="container">
     <form class="submission-form" onsubmit="submitRestaurant(); return false;">
       <h3>Submit a New Spot</h3>
-      <label>Name: <input type="text" id="name" placeholder="Name" required /></label><br />
-      <label>Location: <input type="text" id="location" placeholder="Location" required /></label><br />
-      <label>Unit: <input type="text" id="Unit" placeholder="Unit" required /></label><br />
-      <label>Cuisine: <input type="text" id="cuisine" placeholder="Cuisine" required /></label><br />
+
+      <label>Name:
+        <input type="text" id="name" placeholder="Restaurant Name" required />
+      </label>
+
+      <label>Location:
+        <input type="text" id="location" placeholder="e.g., Funan" required />
+      </label>
+
+      <label>Unit:
+        <input type="text" id="Unit" placeholder="e.g., B2-K05" />
+      </label>
+
+      <label>Cuisine:
+        <input type="text" id="cuisine" placeholder="e.g., Chinese" required />
+      </label>
+
       <label>Halal:
         <select id="halal" required>
           <option value="">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-      </label><br />
+      </label>
+
       <label>Vegetarian:
         <select id="vegetarian" required>
           <option value="">Select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-      </label><br />
-      <label>Price: <input type="text" id="price" placeholder="Price Range" required /></label><br />
-      <label>Distance: <input type="text" id="distance" placeholder="Distance from office" required /></label><br />
-      <label>Image URL: <input type="text" id="image" placeholder="Image URL" required /></label><br />
-      <label>Review: <input type="text" id="review" placeholder="Your Review" required /></label><br />
+      </label>
+
+      <label>Price:
+        <input type="text" id="price" placeholder="e.g., $ or $$" required />
+      </label>
+
+      <label>Distance:
+        <input type="text" id="distance" placeholder="e.g., 200m or 1.2km" required />
+      </label>
+
+      <label>Image URL:
+        <input type="text" id="image" placeholder="Paste image URL" required />
+      </label>
+
+      <label>Review:
+        <input type="text" id="review" placeholder="Short review" required />
+      </label>
+
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -193,5 +172,38 @@
   <footer>
     &copy; 2025 EatWhere.Food. All makan rights reserved.
   </footer>
+
+  <script>
+    async function submitRestaurant() {
+      const newEntry = {
+        Name: document.getElementById("name").value,
+        Location: document.getElementById("location").value,
+        Unit: document.getElementById("Unit").value || "NULL",
+        Cuisine: document.getElementById("cuisine").value,
+        Halal: document.getElementById("halal").value,
+        Vegetarian: document.getElementById("vegetarian").value,
+        Price: document.getElementById("price").value,
+        Distance: document.getElementById("distance").value,
+        Image_URL: document.getElementById("image").value,
+        Review: document.getElementById("review").value,
+        Type: "NULL"
+      };
+
+      try {
+        const response = await fetch('/api/addRestaurant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newEntry)
+        });
+
+        if (!response.ok) throw new Error("Failed to submit");
+
+        alert("✅ Restaurant submitted successfully!");
+        document.querySelector(".submission-form").reset();
+      } catch (error) {
+        alert("❌ Error submitting restaurant: " + error.message);
+      }
+    }
+  </script>
 </body>
 </html>
