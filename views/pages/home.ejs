@@ -83,43 +83,26 @@
       padding: 1rem;
       background: #eee;
       animation: fadeInUp 1.5s ease;
+      font-size: 0.9rem;
+      color: #666;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     @keyframes fadeInUp {
       from { transform: translateY(20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     @keyframes fadeInDown {
       from { transform: translateY(-20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     @keyframes fadeSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NPWVQS7KKC');
-</script>
 </head>
 <body>
   <header>
@@ -130,21 +113,24 @@
     <a href="/">Home</a>
     <a href="/explore">Explore</a>
     <a href="/about">About</a>
-    <a href="/new">New</a>
+    <a href="/new">Add</a>
   </nav>
+
   <div class="container">
     <div class="filters">
       <select id="filter-cuisine">
         <option value="">All Cuisines</option>
-         <% cuisines.forEach(cuisine => { %>
-            <option value=<%= cuisine %>><%= cuisine %></option>
-          <% }); %>
+        <% cuisines.forEach(cuisine => { %>
+          <option value="<%= cuisine %>"><%= cuisine %></option>
+        <% }); %>
       </select>
+
       <select id="filter-halal">
         <option value="">Halal?</option>
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>
+
       <select id="filter-price">
         <option value="">Price?</option>
         <option value="$">$</option>
@@ -152,51 +138,49 @@
         <option value="$$$">$$$</option>
         <option value="$$$$">$$$$</option>
       </select>
+
       <select id="filter-vegetarian">
         <option value="">Vegetarian?</option>
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>
+
       <button onclick="filterRestaurants()">Search</button>
       <button onclick="goLucky()">🎲 Go Lucky!</button>
+      <button onclick="clearFilters()">❌ Clear Filters</button>
     </div>
+
     <div id="restaurant-list"></div>
   </div>
+
   <footer>
     &copy; 2025 EatWhere.Food. All makan rights reserved.
-    <p>Disclaimer:
-    This website is created for learning purposes only. The information provided here should not be considered professional advice. Please note that we make no guarantees regarding the accuracy, completeness, or reliability of the contents of this website. Any actions you take based on the contents of this website are at your own risk. We are not liable for any losses or damages incurred from the use of this website.</p>
+    <p><em>This website is created for learning purposes only. The information provided here should not be considered professional advice. Please note that we make no guarantees regarding the accuracy, completeness, or reliability of the contents of this website. Any actions you take based on the contents of this website are at your own risk. We are not liable for any losses or damages incurred from the use of this website.</em></p>
   </footer>
 
   <script>
-  let allRestaurants = [];
+    let allRestaurants = [];
 
-  async function fetchRestaurants() {
-    try {
-      const response = await fetch('/api/restaurants');
-      const data = await response.json();
-      console.log("✅ Fetched data:", data);
-      allRestaurants = data;
-      return data;
-    } catch (error) {
-      console.error("❌ Failed to fetch restaurants:", error);
-      return [];
-    }
-  }
-
-  async function renderList(data) {
-    const container = document.getElementById("restaurant-list");
-    container.innerHTML = "";
-    if (data.length === 0) {
-      container.innerHTML = "<p>No results found.</p>";
-      return;
+    async function fetchRestaurants() {
+      try {
+        const res = await fetch('/api/restaurants');
+        const data = await res.json();
+        console.log("✅ Fetched:", data);
+        allRestaurants = data;
+        return data;
+      } catch (err) {
+        console.error("❌ Fetch error:", err);
+        return [];
+      }
     }
 
-    let restaurants = '';
-    data.forEach((r) => {
-      if (!r.Location || !r.Name) return;
-
-      restaurants += `
+    function renderList(data) {
+      const container = document.getElementById("restaurant-list");
+      if (!data.length) {
+        container.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      container.innerHTML = data.map(r => `
         <div class="restaurant-card">
           <img src="${r.Image_URL}" alt="${r.Name}" />
           <div class="restaurant-info">
@@ -206,40 +190,45 @@
             <p><em>Review:</em> ${r.Review || 'N/A'}</p>
           </div>
         </div>
-      `;
-    });
+      `).join('');
+    }
 
-    container.innerHTML = restaurants;
-  }
+    async function filterRestaurants() {
+      const cuisine = document.getElementById("filter-cuisine").value.toLowerCase().trim();
+      const halal = document.getElementById("filter-halal").value.toLowerCase().trim();
+      const price = document.getElementById("filter-price").value.trim();
+      const vegetarian = document.getElementById("filter-vegetarian").value.toLowerCase().trim();
 
-  async function filterRestaurants() {
-    const cuisine = document.getElementById("filter-cuisine").value.toLowerCase().trim();
-    const halal = document.getElementById("filter-halal").value.toLowerCase().trim();
-    const vegetarian = document.getElementById("filter-vegetarian").value.toLowerCase().trim();
+      if (allRestaurants.length === 0) await fetchRestaurants();
 
-    if (allRestaurants.length === 0) await fetchRestaurants();
+      const results = allRestaurants.filter(r => {
+        const matchCuisine = !cuisine || (r.Cuisine || "").toLowerCase().includes(cuisine);
+        const matchHalal = !halal || (r.Halal || "").toLowerCase() === halal;
+        const matchVegetarian = !vegetarian || (r.Vegetarian || "").toLowerCase() === vegetarian;
+        const matchPrice = !price || (r.Price || "").trim() === price;
+        return matchCuisine && matchHalal && matchVegetarian && matchPrice;
+      });
 
-    const results = allRestaurants.filter((r) => {
-      const matchCuisine = cuisine === "" || (r.Cuisine || "").toLowerCase().includes(cuisine);
-      const matchHalal = halal === "" || (r.Halal || "").toLowerCase() === halal;
-      const matchVegetarian = vegetarian === "" || (r.Vegetarian || "").toLowerCase() === vegetarian;
-      return matchCuisine && matchHalal && matchVegetarian;
-    });
+      renderList(results);
+    }
 
-    renderList(results);
-  }
+    async function goLucky() {
+      if (allRestaurants.length === 0) await fetchRestaurants();
+      const lucky = allRestaurants[Math.floor(Math.random() * allRestaurants.length)];
+      renderList([lucky]);
+    }
 
-  async function goLucky() {
-    if (allRestaurants.length === 0) await fetchRestaurants();
-    const random = allRestaurants[Math.floor(Math.random() * allRestaurants.length)];
-    renderList([random]);
-  }
+    function clearFilters() {
+      document.getElementById("filter-cuisine").value = "";
+      document.getElementById("filter-halal").value = "";
+      document.getElementById("filter-vegetarian").value = "";
+      document.getElementById("filter-price").value = "";
+      document.getElementById("restaurant-list").innerHTML = "";
+    }
 
-  // No auto-load on page load
-  window.onload = () => {
-    console.log("🕒 Waiting for user action to fetch restaurants.");
-  };
-</script>
-
+    window.onload = () => {
+      console.log("🌐 Page ready. Waiting for user actions.");
+    };
+  </script>
 </body>
 </html>

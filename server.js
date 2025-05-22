@@ -20,6 +20,20 @@ app.get('/api/restaurants', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch restaurants" });
   }
 });
+// API: Extract lastest restaurants
+app.get('/api/latest-restaurants', async (req, res) => {
+  try {
+    const latest = await prisma.restaurants.findMany({
+      orderBy: { id: 'desc' },
+      take: 3
+    });
+    res.json(latest);
+  } catch (error) {
+    console.error("Error fetching latest restaurants:", error);
+    res.status(500).json({ error: "Failed to fetch latest restaurants" });
+  }
+});
+
 
 // API: Add new restaurant
 app.post('/api/addRestaurant', async (req, res) => {
