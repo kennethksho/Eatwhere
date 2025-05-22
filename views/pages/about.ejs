@@ -18,6 +18,7 @@
       color: white;
       padding: 1rem;
       text-align: center;
+      font-size: 1rem;
       animation: fadeInDown 1s ease;
     }
     nav {
@@ -41,10 +42,13 @@
       max-width: 900px;
       margin: 2rem auto;
       padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       animation: fadeInUp 1s ease;
     }
     h1 {
-      color: #d35400;
+      color: white;
       font-size: 2rem;
     }
     h2 {
@@ -61,16 +65,17 @@
     ul {
       margin-left: 1.5rem;
     }
+    li {
+      margin-bottom: 0.5rem;
+    }
     footer {
       text-align: center;
-      margin-top: 4rem;
       padding: 1rem;
       background: #eee;
       font-size: 0.9rem;
-      color: #888;
+      color: #666;
       animation: fadeInUp 1.5s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -84,7 +89,6 @@
       to { transform: translateY(0); opacity: 1; }
     }
   </style>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -99,13 +103,13 @@
     <p>Good food around you – <strong>EatWhere.Food</strong></p>
   </header>
   <nav>
-     <a href="/">Home</a>
+    <a href="/">Home</a>
     <a href="/explore">Explore</a>
     <a href="/about">About</a>
     <a href="/new">Add</a>
   </nav>
   <div class="container">
-    <h1>🍽️ About EatWhere</h1>
+    <h2>🍽️ About EatWhere</h2>
     <p>Welcome to <strong>EatWhere</strong> — our office lunch spot finder!</p>
 
     <p>After months (or even years!) of eating out near the office, we noticed a recurring problem:</p>
@@ -113,15 +117,14 @@
     <blockquote>
       “Where to eat ah?”<br />
       “Same old places again?”<br />
-      “Oh, is the place halal certified?"<br />
-      "Today Ken not joining, shall we have vegetarian?”
+      “Oh, is the place halal certified?”<br />
+      “Today Ken not joining, shall we have vegetarian?”
     </blockquote>
 
     <p>We get it. Lunch should be something to look forward to — not a midday headache.</p>
 
     <h2>🥢 What is EatWhere?</h2>
-    <p><strong>EatWhere</strong> is a light, fun, and practical web app to help you discover 
-      <strong>good food around MDDI</strong>, especially when you're out of ideas or have teammates with different dietary needs.</p>
+    <p><strong>EatWhere</strong> is a light, fun, and practical web app to help you discover <strong>good food around MDDI</strong>, especially when you're out of ideas or have teammates with different dietary needs.</p>
 
     <h2>🍛 What You Can Do</h2>
     <ul>

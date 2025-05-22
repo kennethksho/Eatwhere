@@ -42,7 +42,12 @@
       animation: fadeInUp 1s ease;
     }
     .filters {
+      background-color: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
       display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 2rem;
       animation: fadeIn 1.2s ease;
@@ -52,7 +57,16 @@
       font-size: 1rem;
       border-radius: 12px;
       border: 1px solid #ccc;
+      background-color: #fff;
     }
+     button {
+      background-color: #e3f2fd;
+    }
+    button:hover {
+      background-color: #bbdefb;
+      cursor: pointer;
+    }
+
     .restaurant-card {
       background-color: white;
       border: 1px solid #ddd;
@@ -74,21 +88,31 @@
       flex-grow: 1;
     }
     .restaurant-name {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+    .restaurant-info p {
+      margin: 0.25rem 0;
+    }
+    .share-btns {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .share-btns a img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s ease;
+    }
+    .share-btns a img:hover {
+      transform: scale(1.4);
     }
     .highlight {
       background-color: #fff3cd;
       border-left: 5px solid #ffc107;
       padding: 0.5rem;
       margin-bottom: 1rem;
-    }
-    .submission-form {
-      margin-top: 3rem;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ddd;
     }
     footer {
       text-align: center;
@@ -107,6 +131,10 @@
     @keyframes fadeInDown {
       from { transform: translateY(-20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NPWVQS7KKC"></script>
@@ -171,29 +199,37 @@
   }
 
   async function renderList(data) {
-    const container = document.getElementById("restaurant-list");
-    container.innerHTML = "";
-    if (data.length === 0) {
-      container.innerHTML = "<p>No results found.</p>";
-      return;
-    }
-    let restaurants = '';
-    data.forEach((r) => {
-      if (!r.Location || !r.Name ) return;
-      restaurants += `
-        <div class="restaurant-card">
-          <img src="${r.Image_URL}" alt="${r.Name}" />
-          <div class="restaurant-info">
-            <div class="restaurant-name">${r.Name}</div>
-            <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian: ${r.Vegetarian}</p>
-            <p>Location: ${r.Location} • Price: ${r.Price} • Distance: ${r.Distance}</p>
-            <p><em>Review:</em> ${r.Review || 'N/A'}</p>
+      const container = document.getElementById("restaurant-list");
+      container.innerHTML = "";
+      if (!data.length) {
+        container.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      let restaurants = '';
+      data.forEach(r => {
+        if (!r.Location || !r.Name) return;
+        const wa = `https://wa.me/?text=${encodeURIComponent(r.Name + ' - ' + r.Location)}`;
+        const tg = `https://t.me/share/url?url=${encodeURIComponent('https://eatwhere.food')}&text=${encodeURIComponent(r.Name + ' - ' + r.Location)}`;
+        const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://eatwhere.food')}`;
+        restaurants += `
+          <div class="restaurant-card">
+            <img src="${r.Image_URL}" alt="${r.Name}" />
+            <div class="restaurant-info">
+              <div class="restaurant-name">${r.Name}</div>
+              <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian Friendly: ${r.Vegetarian}</p>
+              <p>Location: ${r.Location} • Price: ${r.Price} • Distance: ${r.Distance}</p>
+              <p><em>Review:</em> ${r.Review || 'N/A'}</p>
+              <div class="share-btns">
+                <a href="${wa}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+                <a href="${tg}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+                <a href="${fb}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+              </div>
+            </div>
           </div>
-        </div>
-      `;
-    });
-    container.innerHTML = restaurants;
-  }
+        `;
+      });
+      container.innerHTML = restaurants;
+    }
 
   async function renderLatest() {
     try {
@@ -205,7 +241,7 @@
           <img src="${r.Image_URL}" alt="${r.Name}" />
           <div class="restaurant-info">
             <div class="restaurant-name">${r.Name}</div>
-            <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian: ${r.Vegetarian}</p>
+            <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian Friendly: ${r.Vegetarian}</p>
             <p>Location: ${r.Location} • Price: ${r.Price} • Distance: ${r.Distance}</p>
             <p><em>Review:</em> ${r.Review || 'N/A'}</p>
           </div>

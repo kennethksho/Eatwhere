@@ -42,6 +42,10 @@
       animation: fadeInUp 1s ease;
     }
     .filters {
+      background-color: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
@@ -53,6 +57,14 @@
       font-size: 1rem;
       border-radius: 12px;
       border: 1px solid #ccc;
+      background-color: #fff;
+    }
+    button {
+      background-color: #e3f2fd;
+    }
+    button:hover {
+      background-color: #bbdefb;
+      cursor: pointer;
     }
     .restaurant-card {
       background-color: white;
@@ -75,8 +87,24 @@
       flex-grow: 1;
     }
     .restaurant-name {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+    .restaurant-info p {
+      margin: 0.25rem 0;
+    }
+    .share-btns {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .share-btns a img {
+      width: 24px;
+      height: 24px;
+    }
+    .share-btns a img:hover {
+      transform: scale(1.4);
     }
     footer {
       text-align: center;
@@ -117,35 +145,36 @@
   </nav>
 
   <div class="container">
+    <h2>Find Your Next Meal 🍽️</h2>
     <div class="filters">
       <select id="filter-cuisine">
-        <option value="">All Cuisines</option>
+        <option value="">🍱 All Cuisines</option>
         <% cuisines.forEach(cuisine => { %>
           <option value="<%= cuisine %>"><%= cuisine %></option>
         <% }); %>
       </select>
 
       <select id="filter-halal">
-        <option value="">Halal?</option>
+        <option value="">🕌 Halal?</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <select id="filter-vegetarian">
+        <option value="">🌱 Vegetarian?</option>
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>
 
       <select id="filter-price">
-        <option value="">Price?</option>
+        <option value="">💰 Price?</option>
         <option value="$">$</option>
         <option value="$$">$$</option>
         <option value="$$$">$$$</option>
         <option value="$$$$">$$$$</option>
       </select>
 
-      <select id="filter-vegetarian">
-        <option value="">Vegetarian?</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-      </select>
-
-      <button onclick="filterRestaurants()">Search</button>
+      <button onclick="filterRestaurants()">🔍 Search</button>
       <button onclick="goLucky()">🎲 Go Lucky!</button>
       <button onclick="clearFilters()">❌ Clear Filters</button>
     </div>
@@ -180,17 +209,29 @@
         container.innerHTML = "<p>No results found.</p>";
         return;
       }
-      container.innerHTML = data.map(r => `
-        <div class="restaurant-card">
-          <img src="${r.Image_URL}" alt="${r.Name}" />
-          <div class="restaurant-info">
-            <div class="restaurant-name">${r.Name}</div>
-            <p>${r.Cuisine} • Halal: ${r.Halal} • Vegetarian: ${r.Vegetarian}</p>
-            <p>Location: ${r.Location} • Price: ${r.Price} • Distance: ${r.Distance}</p>
-            <p><em>Review:</em> ${r.Review || 'N/A'}</p>
+      container.innerHTML = data.map(r => {
+        const text = `Check out ${r.Name} at ${r.Location}! ${r.Cuisine}, Price: ${r.Price}, Review: ${r.Review || 'N/A'} – via EatWhere.Food`;
+        const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        const tg = `https://t.me/share/url?url=${encodeURIComponent(text)}&text=${encodeURIComponent(text)}`;
+        const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(text)}`;
+
+        return `
+          <div class="restaurant-card">
+            <img src="${r.Image_URL}" alt="${r.Name}" />
+            <div class="restaurant-info">
+              <div class="restaurant-name">${r.Name}</div>
+              <p>${r.Cuisine} • 🕌 Halal: ${r.Halal} • 🌱 Vegetarian: ${r.Vegetarian}</p>
+              <p>📍 ${r.Location} • 💰 ${r.Price} • 🚶 ${r.Distance}</p>
+              <p><em>Review:</em> ${r.Review || 'N/A'}</p>
+              <div class="share-btns">
+                <a href="${wa}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+                <a href="${tg}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+                <a href="${fb}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+              </div>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function filterRestaurants() {
