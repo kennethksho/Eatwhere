@@ -130,6 +130,29 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      background: #fff8e1;
+      border-radius: 8px;
+    }
+    .no-results button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #ff6f00;
+      color: white;
+      border: none;
+    }
+    .error {
+      color: #d32f2f;
+      text-align: center;
+    }
+    .loading {
+      text-align: center;
+      padding: 1rem;
+      font-style: italic;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -189,26 +212,65 @@
 
   <script>
     let allRestaurants = [];
+    let isLoading = false;
 
     async function fetchRestaurants() {
       try {
+        isLoading = true;
+        document.getElementById("restaurant-list").innerHTML = '<p class="loading">Loading restaurants...</p>';
+        
         const res = await fetch('/api/restaurants');
+        if (!res.ok) throw new Error('Failed to fetch restaurants');
+        
         const data = await res.json();
-        console.log("✅ Fetched:", data);
         allRestaurants = data;
         return data;
       } catch (err) {
         console.error("❌ Fetch error:", err);
+        document.getElementById("restaurant-list").innerHTML = `
+          <p class="error">Failed to load restaurants. Please try again later.</p>
+        `;
         return [];
+      } finally {
+        isLoading = false;
       }
+    }
+
+    function getFilteredRestaurants() {
+      const cuisine = document.getElementById("filter-cuisine").value;
+      const halal = document.getElementById("filter-halal").value;
+      const vegetarian = document.getElementById("filter-vegetarian").value;
+      const price = document.getElementById("filter-price").value;
+
+      return allRestaurants.filter(restaurant => {
+        const matchesCuisine = !cuisine || 
+          (restaurant.Cuisine && restaurant.Cuisine.toLowerCase().includes(cuisine.toLowerCase()));
+        
+        const matchesHalal = !halal || 
+          (restaurant.Halal && restaurant.Halal.toString().toLowerCase() === halal.toLowerCase());
+        
+        const matchesVegetarian = !vegetarian || 
+          (restaurant.Vegetarian && restaurant.Vegetarian.toString().toLowerCase() === vegetarian.toLowerCase());
+        
+        const matchesPrice = !price || 
+          (restaurant.Price && restaurant.Price.trim() === price);
+
+        return matchesCuisine && matchesHalal && matchesVegetarian && matchesPrice;
+      });
     }
 
     function renderList(data) {
       const container = document.getElementById("restaurant-list");
-      if (!data.length) {
-        container.innerHTML = "<p>No results found.</p>";
+      if (!data || data.length === 0) {
+        container.innerHTML = `
+          <div class="no-results">
+            <p>No restaurants found matching your criteria.</p>
+            <button onclick="clearFilters()">Clear all filters</button>
+          </div>
+        `;
         return;
       }
+      
       container.innerHTML = data.map(r => {
         const text = `Check out ${r.Name} at ${r.Location}! ${r.Cuisine}, Price: ${r.Price}, Review: ${r.Review || 'N/A'} – via EatWhere.Food`;
         const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -217,12 +279,12 @@
 
         return `
           <div class="restaurant-card">
-            <img src="${r.Image_URL}" alt="${r.Name}" />
+            <img src="${r.Image_URL || 'https://via.placeholder.com/150'}" alt="${r.Name}" />
             <div class="restaurant-info">
               <div class="restaurant-name">${r.Name}</div>
-              <p>${r.Cuisine} • 🕌 Halal: ${r.Halal} • 🌱 Vegetarian: ${r.Vegetarian}</p>
-              <p>📍 ${r.Location} • 💰 ${r.Price} • 🚶 ${r.Distance}</p>
-              <p><em>Review:</em> ${r.Review || 'N/A'}</p>
+              <p>${r.Cuisine || 'Unknown cuisine'} • 🕌 Halal: ${r.Halal || 'Unknown'} • 🌱 Vegetarian: ${r.Vegetarian || 'Unknown'}</p>
+              <p>📍 ${r.Location || 'Location not specified'} • 💰 ${r.Price || 'Price not available'} • 🚶 ${r.Distance || 'Distance not available'}</p>
+              <p><em>Review:</em> ${r.Review || 'No reviews yet'}</p>
               <div class="share-btns">
                 <a href="${wa}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
                 <a href="${tg}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
@@ -235,28 +297,59 @@
     }
 
     async function filterRestaurants() {
-      const cuisine = document.getElementById("filter-cuisine").value.toLowerCase().trim();
-      const halal = document.getElementById("filter-halal").value.toLowerCase().trim();
-      const price = document.getElementById("filter-price").value.trim();
-      const vegetarian = document.getElementById("filter-vegetarian").value.toLowerCase().trim();
-
-      if (allRestaurants.length === 0) await fetchRestaurants();
-
-      const results = allRestaurants.filter(r => {
-        const matchCuisine = !cuisine || (r.Cuisine || "").toLowerCase().includes(cuisine);
-        const matchHalal = !halal || (r.Halal || "").toLowerCase() === halal;
-        const matchVegetarian = !vegetarian || (r.Vegetarian || "").toLowerCase() === vegetarian;
-        const matchPrice = !price || (r.Price || "").trim() === price;
-        return matchCuisine && matchHalal && matchVegetarian && matchPrice;
-      });
-
+      if (isLoading) return;
+      
+      if (allRestaurants.length === 0) {
+        await fetchRestaurants();
+      }
+      
+      const results = getFilteredRestaurants();
       renderList(results);
     }
 
     async function goLucky() {
-      if (allRestaurants.length === 0) await fetchRestaurants();
-      const lucky = allRestaurants[Math.floor(Math.random() * allRestaurants.length)];
-      renderList([lucky]);
+      if (isLoading) return;
+      
+      try {
+        // Ensure we have restaurant data
+        if (allRestaurants.length === 0) {
+          await fetchRestaurants();
+        }
+
+        // Get filtered results
+        const filtered = getFilteredRestaurants();
+        
+        // Handle case where no restaurants match filters
+        if (filtered.length === 0) {
+          document.getElementById("restaurant-list").innerHTML = `
+            <div class="no-results">
+              <p>No restaurants match all your filters.</p>
+              <button onclick="clearFilters()">Clear filters</button>
+            </div>
+          `;
+          return;
+        }
+
+        // Select random restaurant from filtered results
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        const luckyRestaurant = filtered[randomIndex];
+        
+        // Display the selected restaurant
+        renderList([luckyRestaurant]);
+
+        // Visual feedback
+        const goLuckyBtn = document.querySelector('button[onclick="goLucky()"]');
+        goLuckyBtn.textContent = "🎉 Lucky Pick!";
+        setTimeout(() => {
+          goLuckyBtn.textContent = "🎲 Go Lucky!";
+        }, 2000);
+
+      } catch (error) {
+        console.error("Error in goLucky:", error);
+        document.getElementById("restaurant-list").innerHTML = `
+          <p class="error">Oops! Something went wrong. Please try again.</p>
+        `;
+      }
     }
 
     function clearFilters() {
@@ -267,8 +360,9 @@
       document.getElementById("restaurant-list").innerHTML = "";
     }
 
-    window.onload = () => {
-      console.log("🌐 Page ready. Waiting for user actions.");
+    // Initialize on load
+    window.onload = async () => {
+      await fetchRestaurants();
     };
   </script>
 </body>
